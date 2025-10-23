@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "YOUR_TEAM_ID.com.noto.app",
+        "appID": "FW955P8NJT.FW955P8NJT.notooo",
         "paths": [
           "/profile/*",
           "/wishlist/*"
@@ -13,7 +13,7 @@
   },
   "webcredentials": {
     "apps": [
-      "YOUR_TEAM_ID.com.noto.app"
+      "FW955P8NJT.FW955P8NJT.notooo"
     ]
   }
 }
