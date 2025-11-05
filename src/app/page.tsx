@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen w-full bg-black text-white overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0 z-0">
         <Image
           src="/images/ChatGPT Image 30 окт. 2025 г., 17_35_09.png"
           alt="Noto - Your ultimate wish list"
@@ -15,115 +15,96 @@ export default function Home() {
         />
       </div>
 
-      {/* Page container */}
-      <div className="relative min-h-screen flex flex-col">
+      {/* Content Overlay */}
+      <div className="relative z-10 min-h-screen">
         {/* Header */}
-        <header className="w-full">
-          <div className="px-4 sm:px-6 lg:px-12 pt-6 sm:pt-10 lg:pt-14">
-            <Link
-              href="/about"
-              className="text-white font-bold tracking-tight hover:opacity-70 transition-opacity"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
-            >
-              <span className="text-[22px] sm:text-[26px] lg:text-[30px]">ABOUT</span>
-            </Link>
-          </div>
+        <header className="absolute" style={{ paddingLeft: '45px', paddingTop: '90px' }}>
+          <Link 
+            href="/about" 
+            className="text-white text-[30px] font-bold tracking-tight hover:opacity-70 transition-opacity"
+            style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
+          >
+            ABOUT
+          </Link>
         </header>
 
-        {/* Logo (center, rotated) */}
-        <div className="flex justify-center mt-4 sm:mt-6 lg:mt-8">
-          <div className="relative -rotate-[5deg]">
+        {/* Logo (Center, rotated) */}
+        <div className="absolute left-1/2 -translate-x-1/2 z-20" style={{ top: '45px' }}>
+          <div className="relative" style={{ transform: 'rotate(-5deg)' }}>
             <Image
               src="/images/logo.png"
               alt="Noto"
               width={491}
               height={261}
-              className="w-[140px] sm:w-[200px] lg:w-[260px] xl:w-[300px] h-auto"
-              priority
+              className="w-44"
             />
           </div>
         </div>
 
-        {/* Main content (pushes footer down) */}
-        <main className="flex-1 flex items-end">
-          <div
-            className="
-              w-full
-              px-4 sm:px-6 lg:px-12
-              pb-16 sm:pb-20 lg:pb-24
-            "
+        {/* Main Content */}
+        <div className="absolute left-[45px] bottom-[100px]">
+          <h1
+            className="font-bold m-0 leading-[0.95] text-[clamp(44px,8vw,90px)] tracking-[-0.02em]"
+            style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
           >
-            {/* Hero Title */}
-            <h1
-              className="font-bold m-0 tracking-[-0.02em] text-[clamp(44px,8vw,90px)] leading-[0.95]"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
-            >
-              <span className="block">your ultimate</span>
-              <span className="block">wish-list</span>
-            </h1>
+            {/* строка 1 — якорь для кнопки */}
+            <span className="relative inline-block">
+              your ultimate
+              {/* бейдж — строго под первой строкой и смещён вправо */}
+              <a
+                href="https://apps.apple.com/app/noto"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Download on the App Store"
+                className="absolute left-0 top-full mt-[28px] translate-x-[335px] sm:translate-x-[355px] lg:translate-x-[375px] hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="/images/Download_on_the_App_Store_Badge_US-UK_RGB_wht_092917.svg"
+                  alt="Download on the App Store"
+                  width={160}
+                  height={47}
+                />
+              </a>
+            </span>
 
-            {/* App Store badge — адаптивный сдвиг и масштаб */}
-            <a
-              href="https://apps.apple.com/app/noto"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Download on the App Store"
-              className="
-                inline-block
-                mt-[28px] md:mt-[32px]
-                max-[360px]:ml-0
-                ml-[80px]
-                sm:ml-[140px]
-                md:ml-[220px]
-                lg:ml-[350px]
-                xl:ml-[390px]
-                hover:opacity-80 transition-opacity
-              "
-            >
-              <Image
-                src="/images/Download_on_the_App_Store_Badge_US-UK_RGB_wht_092917.svg"
-                alt="Download on the App Store"
-                width={180}
-                height={53}
-                className="h-auto w-[140px] sm:w-[160px] lg:w-[180px]"
-              />
-            </a>
-          </div>
-        </main>
+            {/* строка 2 */}
+            <span className="block">wish-list</span>
+          </h1>
+        </div>
 
         {/* Footer */}
-        <footer className="w-full">
-          <div
-            className="
-              px-4 sm:px-6 lg:px-12
-              pb-10
-              flex flex-col sm:flex-row sm:items-center sm:justify-end
-              gap-4 sm:gap-10 lg:gap-[100px]
-            "
+        <div className="absolute flex text-[20px]" style={{ right: '100px', bottom: '100px', gap: '100px' }}>
+          <Link 
+            href="/terms" 
+            className="font-bold hover:opacity-70 transition-opacity"
+            style={{ 
+              fontFamily: 'Helvetica Neue, Arial, sans-serif',
+              letterSpacing: '-0.2px'
+            }}
           >
-            <Link
-              href="/terms"
-              className="font-bold hover:opacity-70 transition-opacity"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '-0.2px' }}
-            >
-              <span className="text-[18px] sm:text-[20px]">terms service</span>
-            </Link>
-            <Link
-              href="/support"
-              className="font-bold hover:opacity-70 transition-opacity"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '-0.2px' }}
-            >
-              <span className="text-[18px] sm:text-[20px]">support</span>
-            </Link>
-            <Link
-              href="/faq"
-              className="font-bold hover:opacity-70 transition-opacity"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '-0.2px' }}
-            >
-              <span className="text-[18px] sm:text-[20px]">FAQ</span>
-            </Link>
-          </div>
-        </footer>
+            terms service
+          </Link>
+          <Link 
+            href="/support" 
+            className="font-bold hover:opacity-70 transition-opacity"
+            style={{ 
+              fontFamily: 'Helvetica Neue, Arial, sans-serif',
+              letterSpacing: '-0.2px'
+            }}
+          >
+            support
+          </Link>
+          <Link 
+            href="/faq" 
+            className="font-bold hover:opacity-70 transition-opacity"
+            style={{ 
+              fontFamily: 'Helvetica Neue, Arial, sans-serif',
+              letterSpacing: '-0.2px'
+            }}
+          >
+            FAQ
+          </Link>
+        </div>
       </div>
     </div>
   );
