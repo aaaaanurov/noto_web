@@ -1,7 +1,10 @@
-# https://www.robotstxt.org/robotstxt.html
+# Allow all crawlers
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://noto.space/sitemap.xml
+# Sitemap location
+Sitemap: https://noto.place/sitemap.xml
 
+# Disallow admin/private pages (if any in future)
+# User-agent: *
+# Disallow: /admin/
