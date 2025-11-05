@@ -35,7 +35,7 @@ export default function SupportPage() {
 
           <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
             <p>
-              Need help with Noto? We're here to assist you.
+              Need help with Noto? We&apos;re here to assist you.
             </p>
 
             <section className="mt-12">

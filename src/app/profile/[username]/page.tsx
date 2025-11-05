@@ -30,10 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${displayName} - Noto`,
-    description: profile.bio || `Check out ${displayName}'s profile on Noto`,
+    description: profile.bio || `Check out ${displayName}&#39;s profile on Noto`,
     openGraph: {
       title: displayName,
-      description: profile.bio || `Check out ${displayName}'s profile on Noto`,
+      description: profile.bio || `Check out ${displayName}&#39;s profile on Noto`,
       images: [
         {
           url: ogImageUrl,
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       card: 'summary_large_image',
       title: displayName,
-      description: profile.bio || `Check out ${displayName}'s profile on Noto`,
+      description: profile.bio || `Check out ${displayName}&#39;s profile on Noto`,
       images: [ogImageUrl],
       creator: `@${username}`,
     },

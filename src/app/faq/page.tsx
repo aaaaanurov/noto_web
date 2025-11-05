@@ -68,7 +68,7 @@ export default function FAQPage() {
           <section className="mt-16 p-8 bg-gray-900 rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Still have questions?</h2>
             <p className="text-gray-300 mb-4">
-              We're here to help. Contact our support team.
+              We&apos;re here to help. Contact our support team.
             </p>
             <Link 
               href="/support"
