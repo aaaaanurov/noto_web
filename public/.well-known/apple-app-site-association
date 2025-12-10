@@ -5,6 +5,10 @@
       {
         "appID": "FW955P8NJT.FW955P8NJT.notooo",
         "paths": [
+          "/u/*",
+          "/w/*",
+          "/i/*",
+          "/g/*",
           "/profile/*",
           "/wishlist/*",
           "/item/*"
