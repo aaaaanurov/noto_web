@@ -63,7 +63,7 @@ export default async function ItemPage({ params }: Props) {
           {item.description && <p className="text-gray-600 mt-2 text-sm">{item.description}</p>}
         </div>
 
-        {item.wishlist_name && <p className="text-gray-500 text-sm">From "{item.wishlist_name}" by @{item.owner_username}</p>}
+        {item.wishlist_name && <p className="text-gray-500 text-sm">From &quot;{item.wishlist_name}&quot; by @{item.owner_username}</p>}
         {item.price_amount && <p className="text-lg font-semibold text-purple-600">${item.price_amount}</p>}
 
         <div className="flex flex-col gap-3 w-full mt-4">
