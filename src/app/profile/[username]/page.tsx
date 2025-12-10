@@ -11,9 +11,9 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { username } = await params;
   
-  // Загружаем профиль из Supabase
+  // Загружаем профиль из public view (anon access)
   const { data: profile } = await supabase
-    .from('profiles')
+    .from('public_profiles_preview')
     .select('*')
     .eq('username', username)
     .single<Profile>();
@@ -59,9 +59,9 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const { username } = await params;
   const search = await searchParams;
   
-  // Загружаем профиль
+  // Загружаем профиль из public view (anon access)
   const { data: profile, error } = await supabase
-    .from('profiles')
+    .from('public_profiles_preview')
     .select('*')
     .eq('username', username)
     .single<Profile>();

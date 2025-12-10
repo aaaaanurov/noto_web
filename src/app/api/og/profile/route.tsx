@@ -11,9 +11,9 @@ export async function GET(request: Request) {
     return new Response('Username is required', { status: 400 });
   }
 
-  // Загружаем профиль
+  // Загружаем профиль из public view (anon access)
   const { data: profile } = await supabase
-    .from('profiles')
+    .from('public_profiles_preview')
     .select('*')
     .eq('username', username)
     .single<Profile>();
