@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { supabase } from '@/lib/supabase';
+import { supabase, type WishlistPreview } from '@/lib/supabase';
 
 export const runtime = 'edge';
 
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   const { data: wishlist } = await supabase
     .rpc('get_wishlist_preview', { p_token: token })
-    .single();
+    .single<WishlistPreview>();
 
   if (!wishlist) {
     return new Response('Wishlist not found', { status: 404 });

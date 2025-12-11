@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { supabase, type Wishlist } from '@/lib/supabase';
+import { supabase, type WishlistPreview } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   const { data: wishlist } = await supabase
     .rpc('get_wishlist_preview', { p_token: token })
-    .single();
+    .single<WishlistPreview>();
 
   if (!wishlist) {
     return { title: 'Wishlist not found - Noto' };
@@ -42,12 +42,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function WishlistPage({ params, searchParams }: Props) {
+export default async function WishlistPage({ params }: Props) {
   const { token } = await params;
   
   const { data: wishlist, error } = await supabase
     .rpc('get_wishlist_preview', { p_token: token })
-    .single();
+    .single<WishlistPreview>();
 
   if (error || !wishlist) {
     notFound();

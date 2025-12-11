@@ -50,3 +50,35 @@ export interface WishlistItem {
   created_at: string;
 }
 
+// Типы для RPC preview функций
+export interface WishlistPreview {
+  id: number;
+  share_token: string;
+  name: string;
+  description: string | null;
+  cover_color_hex: string | null;
+  text_color_hex: string | null;
+  image_url: string | null;
+  privacy: string;
+  created_at: string;
+  owner_username: string;
+  owner_name: string | null;
+  owner_avatar: string | null;
+  items_count: number;
+}
+
+export interface ItemPreview {
+  id: number;
+  title: string;
+  description: string | null;
+  image_url: string | null;
+  url: string | null;
+  price_amount: number | null;
+  price_band: string | null;
+  created_at: string;
+  wishlist_id: number;
+  wishlist_name: string;
+  wishlist_token: string;
+  owner_username: string;
+  owner_name: string | null;
+}

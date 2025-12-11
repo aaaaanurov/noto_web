@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { supabase } from '@/lib/supabase';
+import { supabase, type ItemPreview } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 
 type Props = { params: Promise<{ id: string }> };
@@ -10,7 +10,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   if (isNaN(itemId)) return { title: 'Item not found - Noto' };
 
-  const { data: item } = await supabase.rpc('get_item_preview', { p_item_id: itemId }).single();
+  const { data: item } = await supabase
+    .rpc('get_item_preview', { p_item_id: itemId })
+    .single<ItemPreview>();
 
   if (!item) return { title: 'Item not found - Noto' };
 
@@ -39,7 +41,9 @@ export default async function ItemPage({ params }: Props) {
 
   if (isNaN(itemId)) notFound();
 
-  const { data: item, error } = await supabase.rpc('get_item_preview', { p_item_id: itemId }).single();
+  const { data: item, error } = await supabase
+    .rpc('get_item_preview', { p_item_id: itemId })
+    .single<ItemPreview>();
 
   if (error || !item) notFound();
 
