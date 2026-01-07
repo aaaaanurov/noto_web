@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { supabase, type WishlistPreview } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
 type Props = {
   params: Promise<{ token: string }>;
@@ -54,35 +55,111 @@ export default async function WishlistPage({ params }: Props) {
   }
 
   const deepLink = `noto://wishlist/${token}`;
-  const coverColor = wishlist.cover_color_hex || '#667eea';
+  const itemsCount = wishlist.items_count || 0;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8" style={{ background: `linear-gradient(135deg, ${coverColor} 0%, #764ba2 100%)` }}>
-      <main className="flex flex-col gap-8 items-center bg-white rounded-2xl p-12 shadow-2xl max-w-2xl w-full">
-        {wishlist.image_url ? (
-          <img src={wishlist.image_url} alt={wishlist.name} className="w-full h-48 object-cover rounded-lg" />
-        ) : (
-          <div className="w-full h-48 rounded-lg" style={{ backgroundColor: coverColor }} />
-        )}
-
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 uppercase">{wishlist.name}</h1>
-          {wishlist.description && <p className="text-gray-600 mt-4">{wishlist.description}</p>}
-          {wishlist.items_count > 0 && <p className="text-sm text-gray-500 mt-2">{wishlist.items_count} items</p>}
+    <div
+      className="relative min-h-screen w-full bg-black text-white overflow-hidden"
+      style={{
+        backgroundImage: wishlist.image_url ? `url(${wishlist.image_url})` : 'url(/images/hero-background.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Gradient Overlay */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(270deg, rgba(26, 26, 26, 0.1) 0%, rgba(26, 26, 26, 0.92) 100%)',
+        }}
+      />
+      
+      {/* Content */}
+      <div className="relative min-h-screen flex flex-col p-8 sm:p-12 lg:p-[72px]">
+        {/* Header */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20">
+            <Image
+              src="/images/app-icon.png"
+              alt="Noto"
+              width={80}
+              height={80}
+              className="rounded-[19px]"
+            />
+            <Image
+              src="/images/logo.png"
+              alt=""
+              width={50}
+              height={27}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 sm:w-[50px]"
+            />
+          </div>
+          <span 
+            className="text-white text-lg sm:text-[25px] tracking-wide"
+            style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.03em' }}
+          >
+            Ultimate wishlist
+          </span>
         </div>
-
-        {wishlist.owner_username && <p className="text-gray-500">by @{wishlist.owner_username}</p>}
-
-        <div className="flex flex-col gap-4 w-full mt-4">
-          <a href={deepLink} className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg text-center transition-colors">
-            Open in Noto App
-          </a>
-          <a href="https://apps.apple.com/app/id6753711015" target="_blank" rel="noopener noreferrer" className="w-full border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-semibold py-3 px-6 rounded-lg text-center transition-colors">
-            Download Noto
-          </a>
+        
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col justify-center max-w-2xl mt-8 sm:mt-0">
+          <div className="flex flex-col gap-6 sm:gap-7">
+            {/* Title - UPPERCASE */}
+            <h1 
+              className="text-3xl sm:text-4xl lg:text-[56px] font-bold uppercase leading-none"
+              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.03em' }}
+            >
+              {wishlist.name}
+            </h1>
+            
+            {/* Description */}
+            {wishlist.description && (
+              <p 
+                className="text-lg sm:text-xl lg:text-[32px] leading-relaxed max-w-xl"
+                style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.03em', lineHeight: 1.25 }}
+              >
+                {wishlist.description}
+              </p>
+            )}
+            
+            {/* Meta */}
+            <p 
+              className="text-[#B3B3B3] text-lg sm:text-xl lg:text-[32px]"
+              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
+            >
+              {itemsCount} {itemsCount === 1 ? 'item' : 'items'} by @{wishlist.owner_username}
+            </p>
+          </div>
+          
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-10 sm:mt-12">
+            <a
+              href={deepLink}
+              className="px-8 py-4 bg-white text-black font-bold text-lg rounded-xl hover:bg-gray-100 transition-colors text-center"
+              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
+            >
+              Open in Noto
+            </a>
+            <a
+              href="https://apps.apple.com/app/id6753711015"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 border-2 border-white text-white font-bold text-lg rounded-xl hover:bg-white/10 transition-colors text-center"
+              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
+            >
+              Download App
+            </a>
+          </div>
         </div>
-      </main>
-      <footer className="mt-8 text-center text-sm text-white opacity-80"><p>Noto - Share your wishlists</p></footer>
+        
+        {/* Footer */}
+        <div className="mt-auto pt-8">
+          <p className="text-white/60 text-sm" style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}>
+            Noto — your ultimate wishlist
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

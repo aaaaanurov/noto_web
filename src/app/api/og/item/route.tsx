@@ -1,30 +1,38 @@
 import { ImageResponse } from 'next/og';
-import { supabase, type Profile } from '@/lib/supabase';
+import { supabase, type ItemPreview } from '@/lib/supabase';
 
 export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const username = searchParams.get('username');
+  const id = searchParams.get('id');
 
-  if (!username) {
-    return new Response('Username is required', { status: 400 });
+  if (!id) {
+    return new Response('Item ID is required', { status: 400 });
   }
 
-  const { data: profile } = await supabase
-    .rpc('get_profile_preview', { p_username: username })
-    .single<Profile>();
-
-  if (!profile) {
-    return new Response('Profile not found', { status: 404 });
+  const itemId = parseInt(id, 10);
+  if (isNaN(itemId)) {
+    return new Response('Invalid item ID', { status: 400 });
   }
 
-  const displayName = profile.full_name || profile.username || 'User';
-  const bio = profile.bio || '';
+  const { data: item } = await supabase
+    .rpc('get_item_preview', { p_item_id: itemId })
+    .single<ItemPreview>();
+
+  if (!item) {
+    return new Response('Item not found', { status: 404 });
+  }
+
+  const title = item.title || 'Item';
+  const description = item.description || '';
+  const ownerUsername = item.owner_username || 'noto';
+  const wishlistName = item.wishlist_name || '';
+  const price = item.price_amount;
   
-  // Аватар пользователя или фон
-  const avatarUrl = profile.avatar_url;
-  const bgImage = `${process.env.NEXT_PUBLIC_APP_URL}/images/hero-background.png`;
+  // Изображение айтема или дефолт
+  const itemImage = item.image_url;
+  const bgImage = itemImage || `${process.env.NEXT_PUBLIC_APP_URL}/images/hero-background.png`;
   
   // Иконка приложения
   const appIconUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/app-icon.png`;
@@ -41,16 +49,16 @@ export async function GET(request: Request) {
           fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
         }}
       >
-        {/* Background */}
+        {/* Background Image */}
         <img
           src={bgImage}
           alt=""
           style={{
             position: 'absolute',
-            top: 0,
+            top: itemImage ? -100 : 0,
             left: 0,
             width: 1200,
-            height: 630,
+            height: itemImage ? 830 : 630,
             objectFit: 'cover',
           }}
         />
@@ -63,7 +71,7 @@ export async function GET(request: Request) {
             left: 0,
             width: 1200,
             height: 630,
-            background: 'linear-gradient(270deg, rgba(26, 26, 26, 0.2) 0%, rgba(26, 26, 26, 0.9) 100%)',
+            background: 'linear-gradient(270deg, rgba(26, 26, 26, 0.15) 0%, rgba(26, 26, 26, 0.9) 100%)',
           }}
         />
         
@@ -133,79 +141,70 @@ export async function GET(request: Request) {
           <div
             style={{
               display: 'flex',
-              alignItems: 'flex-start',
-              gap: 48,
+              flexDirection: 'column',
+              gap: 24,
               marginTop: 72,
+              maxWidth: 650,
             }}
           >
-            {/* Avatar */}
-            {avatarUrl && (
-              <img
-                src={avatarUrl}
-                alt=""
-                style={{
-                  width: 180,
-                  height: 180,
-                  borderRadius: 90,
-                  objectFit: 'cover',
-                  border: '4px solid rgba(255, 255, 255, 0.2)',
-                }}
-              />
-            )}
-            
-            {/* Text content */}
-            <div
+            {/* Title */}
+            <h1
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 20,
-                maxWidth: avatarUrl ? 500 : 650,
+                color: '#FFFFFF',
+                fontSize: 52,
+                fontWeight: 700,
+                letterSpacing: '0.02em',
+                lineHeight: 1.1,
+                margin: 0,
               }}
             >
-              {/* Name - UPPERCASE */}
-              <h1
+              {title.length > 60 ? title.slice(0, 60) + '...' : title}
+            </h1>
+            
+            {/* Description */}
+            {description && (
+              <p
                 style={{
                   color: '#FFFFFF',
-                  fontSize: 56,
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.03em',
-                  lineHeight: 1,
+                  fontSize: 28,
+                  fontWeight: 400,
+                  letterSpacing: '0.02em',
+                  lineHeight: 1.3,
                   margin: 0,
+                  opacity: 0.9,
+                  maxWidth: 600,
                 }}
               >
-                {displayName}
-              </h1>
-              
-              {/* Username */}
+                {description.length > 100 ? description.slice(0, 100) + '...' : description}
+              </p>
+            )}
+            
+            {/* Price if available */}
+            {price && (
               <span
                 style={{
-                  color: '#B3B3B3',
-                  fontSize: 32,
-                  fontWeight: 400,
+                  color: '#FFFFFF',
+                  fontSize: 36,
+                  fontWeight: 700,
+                  marginTop: 8,
                 }}
               >
-                @{username}
+                ${price}
               </span>
-              
-              {/* Bio */}
-              {bio && (
-                <p
-                  style={{
-                    color: '#FFFFFF',
-                    fontSize: 28,
-                    fontWeight: 400,
-                    letterSpacing: '0.02em',
-                    lineHeight: 1.3,
-                    margin: 0,
-                    marginTop: 8,
-                    opacity: 0.9,
-                  }}
-                >
-                  {bio.length > 100 ? bio.slice(0, 100) + '...' : bio}
-                </p>
-              )}
-            </div>
+            )}
+            
+            {/* Meta: wishlist + author */}
+            <span
+              style={{
+                color: '#B3B3B3',
+                fontSize: 28,
+                fontWeight: 400,
+                lineHeight: 1.2,
+                marginTop: 8,
+              }}
+            >
+              {wishlistName ? `From "${wishlistName}" ` : ''}by @{ownerUsername}
+            </span>
           </div>
         </div>
       </div>
@@ -220,3 +219,4 @@ export async function GET(request: Request) {
     }
   );
 }
+

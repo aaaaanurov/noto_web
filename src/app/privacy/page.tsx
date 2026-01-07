@@ -4,3 +4,10 @@ export default function PrivacyPage() {
   redirect('/terms#privacy');
 }
 
+
+
+
+
+
+
+

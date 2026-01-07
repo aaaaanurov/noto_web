@@ -8,3 +8,13 @@ export default async function ShortProfilePage({ params }: Props) {
   const { username } = await params;
   redirect(`/profile/${username}`);
 }
+
+
+
+
+
+
+
+
+
+
