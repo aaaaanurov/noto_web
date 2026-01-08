@@ -62,7 +62,7 @@ export default async function WishlistPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Logo */}
-      <header className="flex justify-center pt-14 pb-8">
+      <header className="flex justify-center pt-10 pb-8">
         <Link href="/">
           <Image
             src="/images/logo.png"
@@ -70,7 +70,7 @@ export default async function WishlistPage({ params }: Props) {
             width={96}
             height={47}
             className="h-12 w-auto"
-            style={{ filter: 'invert(1)' }}
+            style={{ filter: 'brightness(0) saturate(100%) invert(8%) sepia(67%) saturate(5765%) hue-rotate(358deg) brightness(93%) contrast(112%)' }}
           />
         </Link>
       </header>
@@ -79,7 +79,7 @@ export default async function WishlistPage({ params }: Props) {
       <main className="flex-1 px-[50px] pb-32">
         {/* Title */}
         <h1 
-          className="text-[30px] font-bold uppercase tracking-[0.03em] leading-none text-black"
+          className="text-[25px] font-bold uppercase tracking-[0.03em] leading-none text-black"
           style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
         >
           {wishlist.name}
@@ -87,7 +87,7 @@ export default async function WishlistPage({ params }: Props) {
         
         {/* Username */}
         <p 
-          className="mt-2 text-[20px] text-[#545454]"
+          className="mt-[5px] text-[15px] text-[#545454]"
           style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
         >
           @{wishlist.owner_username}
@@ -95,7 +95,7 @@ export default async function WishlistPage({ params }: Props) {
 
         {/* Cover Image/Color */}
         <div 
-          className="mt-8 w-full aspect-square max-w-[340px] flex items-center justify-center overflow-hidden"
+          className="mt-[20px] w-full aspect-square max-w-[340px] flex items-center justify-center overflow-hidden"
           style={{ backgroundColor: '#F7F7F7' }}
         >
           {hasImage ? (
