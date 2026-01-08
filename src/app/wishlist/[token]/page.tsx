@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { supabase, type WishlistPreview } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type Props = {
   params: Promise<{ token: string }>;
@@ -54,112 +55,98 @@ export default async function WishlistPage({ params }: Props) {
     notFound();
   }
 
-  const deepLink = `noto://wishlist/${token}`;
   const itemsCount = wishlist.items_count || 0;
+  const hasImage = !!wishlist.image_url;
+  const coverColor = wishlist.cover_color_hex || '#F7F7F7';
 
   return (
-    <div
-      className="relative min-h-screen w-full bg-black text-white overflow-hidden"
-      style={{
-        backgroundImage: wishlist.image_url ? `url(${wishlist.image_url})` : 'url(/images/hero-background.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      {/* Gradient Overlay */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(270deg, rgba(26, 26, 26, 0.1) 0%, rgba(26, 26, 26, 0.92) 100%)',
-        }}
-      />
-      
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Logo */}
+      <header className="flex justify-center pt-14 pb-8">
+        <Link href="/">
+          <Image
+            src="/images/logo.png"
+            alt="Noto"
+            width={96}
+            height={47}
+            className="h-12 w-auto"
+            style={{ filter: 'invert(1)' }}
+          />
+        </Link>
+      </header>
+
       {/* Content */}
-      <div className="relative min-h-screen flex flex-col p-8 sm:p-12 lg:p-[72px]">
-        {/* Header */}
-        <div className="flex items-center gap-4 sm:gap-6">
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20">
-            <Image
-              src="/images/app-icon.png"
-              alt="Noto"
-              width={80}
-              height={80}
-              className="rounded-[19px]"
-            />
-            <Image
-              src="/images/logo.png"
-              alt=""
-              width={50}
-              height={27}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 sm:w-[50px]"
-            />
-          </div>
-          <span 
-            className="text-white text-lg sm:text-[25px] tracking-wide"
-            style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.03em' }}
-          >
-            Ultimate wishlist
-          </span>
-        </div>
+      <main className="flex-1 px-[50px] pb-32">
+        {/* Title */}
+        <h1 
+          className="text-[30px] font-bold uppercase tracking-[0.03em] leading-none text-black"
+          style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
+        >
+          {wishlist.name}
+        </h1>
         
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col justify-center max-w-2xl mt-8 sm:mt-0">
-          <div className="flex flex-col gap-6 sm:gap-7">
-            {/* Title - UPPERCASE */}
-            <h1 
-              className="text-3xl sm:text-4xl lg:text-[56px] font-bold uppercase leading-none"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.03em' }}
+        {/* Username */}
+        <p 
+          className="mt-2 text-[20px] text-[#545454]"
+          style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
+        >
+          @{wishlist.owner_username}
+        </p>
+
+        {/* Cover Image/Color */}
+        <div 
+          className="mt-8 w-full aspect-square max-w-[340px] flex items-center justify-center overflow-hidden"
+          style={{ backgroundColor: '#F7F7F7' }}
+        >
+          {hasImage ? (
+            <img
+              src={wishlist.image_url!}
+              alt={wishlist.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div 
+              className="w-4/5 h-4/5 flex items-center justify-center text-white font-bold text-lg uppercase tracking-wide"
+              style={{ backgroundColor: coverColor }}
             >
               {wishlist.name}
-            </h1>
-            
-            {/* Description */}
-            {wishlist.description && (
-              <p 
-                className="text-lg sm:text-xl lg:text-[32px] leading-relaxed max-w-xl"
-                style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.03em', lineHeight: 1.25 }}
-              >
-                {wishlist.description}
-              </p>
-            )}
-            
-            {/* Meta */}
-            <p 
-              className="text-[#B3B3B3] text-lg sm:text-xl lg:text-[32px]"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
-            >
-              {itemsCount} {itemsCount === 1 ? 'item' : 'items'} by @{wishlist.owner_username}
-            </p>
-          </div>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-10 sm:mt-12">
-            <a
-              href={deepLink}
-              className="px-8 py-4 bg-white text-black font-bold text-lg rounded-xl hover:bg-gray-100 transition-colors text-center"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
-            >
-              Open in Noto
-            </a>
-            <a
-              href="https://apps.apple.com/app/id6753711015"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-4 border-2 border-white text-white font-bold text-lg rounded-xl hover:bg-white/10 transition-colors text-center"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
-            >
-              Download App
-            </a>
-          </div>
+            </div>
+          )}
         </div>
-        
-        {/* Footer */}
-        <div className="mt-auto pt-8">
-          <p className="text-white/60 text-sm" style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}>
-            Noto — your ultimate wishlist
+
+        {/* Items count */}
+        <p 
+          className="mt-6 text-[14px] text-black tracking-[0.03em]"
+          style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
+        >
+          {itemsCount} {itemsCount === 1 ? 'item' : 'items'}
+        </p>
+
+        {/* Description */}
+        {wishlist.description && (
+          <p 
+            className="mt-4 text-[14px] text-black leading-[1.43] tracking-[0.03em] max-w-[320px]"
+            style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
+          >
+            {wishlist.description}
           </p>
-        </div>
-      </div>
+        )}
+      </main>
+
+      {/* Download Button - Sticky */}
+      <a
+        href="https://apps.apple.com/app/id6753711015"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-0 left-0 right-0 h-[54px] bg-black flex items-center justify-center"
+      >
+        <span 
+          className="text-white text-[16px] font-medium"
+          style={{ fontFamily: 'Futura, Helvetica Neue, Arial, sans-serif' }}
+        >
+          download app
+        </span>
+      </a>
     </div>
   );
 }

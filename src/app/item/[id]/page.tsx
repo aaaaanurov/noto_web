@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { supabase, type ItemPreview } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -50,118 +51,93 @@ export default async function ItemPage({ params }: Props) {
 
   if (error || !item) notFound();
 
-  const deepLink = `noto://item/${id}`;
-
   return (
-    <div
-      className="relative min-h-screen w-full bg-black text-white overflow-hidden"
-      style={{
-        backgroundImage: item.image_url ? `url(${item.image_url})` : 'url(/images/hero-background.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      {/* Gradient Overlay */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(270deg, rgba(26, 26, 26, 0.2) 0%, rgba(26, 26, 26, 0.95) 100%)',
-        }}
-      />
-      
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Logo */}
+      <header className="flex justify-center pt-14 pb-8">
+        <Link href="/">
+          <Image
+            src="/images/logo.png"
+            alt="Noto"
+            width={96}
+            height={47}
+            className="h-12 w-auto"
+            style={{ filter: 'invert(1)' }}
+          />
+        </Link>
+      </header>
+
       {/* Content */}
-      <div className="relative min-h-screen flex flex-col p-8 sm:p-12 lg:p-[72px]">
-        {/* Header */}
-        <div className="flex items-center gap-4 sm:gap-6">
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20">
-            <Image
-              src="/images/app-icon.png"
-              alt="Noto"
-              width={80}
-              height={80}
-              className="rounded-[19px]"
+      <main className="flex-1 px-[50px] pb-32">
+        {/* Title */}
+        <h1 
+          className="text-[30px] font-bold uppercase tracking-[0.03em] leading-none text-black"
+          style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
+        >
+          {item.title}
+        </h1>
+        
+        {/* Username */}
+        <p 
+          className="mt-2 text-[20px] text-[#545454]"
+          style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
+        >
+          @{item.owner_username}
+        </p>
+
+        {/* Item Image */}
+        <div 
+          className="mt-8 w-full max-w-[340px] aspect-square flex items-center justify-center overflow-hidden"
+          style={{ backgroundColor: '#F7F7F7' }}
+        >
+          {item.image_url ? (
+            <img
+              src={item.image_url}
+              alt={item.title}
+              className="w-full h-full object-contain"
             />
-            <Image
-              src="/images/logo.png"
-              alt=""
-              width={50}
-              height={27}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 sm:w-[50px]"
-            />
-          </div>
-          <span 
-            className="text-white text-lg sm:text-[25px] tracking-wide"
-            style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.03em' }}
+          ) : (
+            <svg className="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          )}
+        </div>
+
+        {/* Price */}
+        {item.price_amount && (
+          <p 
+            className="mt-4 text-[13px] font-medium text-black tracking-[0.03em]"
+            style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
           >
-            Ultimate wishlist
-          </span>
-        </div>
-        
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col justify-center max-w-2xl mt-8 sm:mt-0">
-          <div className="flex flex-col gap-5 sm:gap-6">
-            {/* Title */}
-            <h1 
-              className="text-3xl sm:text-4xl lg:text-[52px] font-bold leading-tight"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.02em' }}
-            >
-              {item.title}
-            </h1>
-            
-            {/* Description */}
-            {item.description && (
-              <p 
-                className="text-lg sm:text-xl lg:text-[28px] leading-relaxed opacity-90 max-w-xl"
-                style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif', letterSpacing: '0.02em' }}
-              >
-                {item.description}
-              </p>
-            )}
-            
-            {/* Price */}
-            {item.price_amount && (
-              <p className="text-2xl sm:text-3xl lg:text-[36px] font-bold">
-                ${item.price_amount}
-              </p>
-            )}
-            
-            {/* Meta */}
-            <p 
-              className="text-[#B3B3B3] text-lg sm:text-xl lg:text-[28px]"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
-            >
-              {item.wishlist_name ? `From "${item.wishlist_name}" ` : ''}by @{item.owner_username}
-            </p>
-          </div>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-10 sm:mt-12">
-            <a
-              href={deepLink}
-              className="px-8 py-4 bg-white text-black font-bold text-lg rounded-xl hover:bg-gray-100 transition-colors text-center"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
-            >
-              Open in Noto
-            </a>
-            <a
-              href="https://apps.apple.com/app/id6753711015"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-4 border-2 border-white text-white font-bold text-lg rounded-xl hover:bg-white/10 transition-colors text-center"
-              style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}
-            >
-              Download App
-            </a>
-          </div>
-        </div>
-        
-        {/* Footer */}
-        <div className="mt-auto pt-8">
-          <p className="text-white/60 text-sm" style={{ fontFamily: 'Helvetica Neue, Arial, sans-serif' }}>
-            Noto — your ultimate wishlist
+            $ {item.price_amount}
           </p>
-        </div>
-      </div>
+        )}
+
+        {/* Description */}
+        {item.description && (
+          <p 
+            className="mt-4 text-[14px] text-black leading-[1.43] tracking-[0.03em] max-w-[320px]"
+            style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
+          >
+            {item.description}
+          </p>
+        )}
+      </main>
+
+      {/* Download Button - Sticky */}
+      <a
+        href="https://apps.apple.com/app/id6753711015"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-0 left-0 right-0 h-[54px] bg-black flex items-center justify-center"
+      >
+        <span 
+          className="text-white text-[16px] font-medium"
+          style={{ fontFamily: 'Futura, Helvetica Neue, Arial, sans-serif' }}
+        >
+          download app
+        </span>
+      </a>
     </div>
   );
 }
