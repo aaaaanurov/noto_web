@@ -21,13 +21,9 @@ export async function GET(request: Request) {
 
   const displayName = profile.full_name || profile.username || 'User';
   const bio = profile.bio || '';
-  
-  // Аватар пользователя или фон
   const avatarUrl = profile.avatar_url;
-  const bgImage = `${process.env.NEXT_PUBLIC_APP_URL}/images/hero-background.png`;
   
-  // Иконка приложения
-  const appIconUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/app-icon.png`;
+  // Logo URL
   const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/logo.png`;
 
   return new ImageResponse(
@@ -37,176 +33,164 @@ export async function GET(request: Request) {
           width: 1200,
           height: 630,
           display: 'flex',
-          position: 'relative',
+          flexDirection: 'column',
+          backgroundColor: '#FFFFFF',
           fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+          position: 'relative',
         }}
       >
-        {/* Background */}
-        <img
-          src={bgImage}
-          alt=""
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: 1200,
-            height: 630,
-            objectFit: 'cover',
-          }}
-        />
-        
-        {/* Gradient Overlay - dark on left */}
+        {/* Header with Logo */}
         <div
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: 1200,
-            height: 630,
-            background: 'linear-gradient(270deg, rgba(26, 26, 26, 0.2) 0%, rgba(26, 26, 26, 0.9) 100%)',
-          }}
-        />
-        
-        {/* Content Container */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
             display: 'flex',
-            flexDirection: 'column',
-            padding: 72,
+            justifyContent: 'center',
+            paddingTop: 48,
+            paddingBottom: 32,
           }}
         >
-          {/* Header: App Icon + Logo + Text */}
+          <img
+            src={logoUrl}
+            alt="Noto"
+            style={{
+              height: 48,
+              width: 'auto',
+            }}
+          />
+        </div>
+
+        {/* Main Content */}
+        <div
+          style={{
+            display: 'flex',
+            flex: 1,
+            paddingLeft: 72,
+            paddingRight: 72,
+            gap: 64,
+          }}
+        >
+          {/* Left: Text Content */}
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
-              gap: 24,
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              paddingTop: 16,
+              flex: 1,
             }}
           >
-            {/* App Icon with Logo inside */}
-            <div
+            {/* Name - UPPERCASE */}
+            <h1
               style={{
-                width: 80,
-                height: 80,
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                color: '#1A1A1A',
+                fontSize: 42,
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.03em',
+                lineHeight: 1.1,
+                margin: 0,
               }}
             >
-              <img
-                src={appIconUrl}
-                alt=""
-                style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 19,
-                }}
-              />
-              <img
-                src={logoUrl}
-                alt=""
-                style={{
-                  position: 'absolute',
-                  width: 50,
-                  height: 'auto',
-                }}
-              />
-            </div>
+              {displayName.length > 30 ? displayName.slice(0, 30) + '...' : displayName}
+            </h1>
             
-            {/* "Ultimate wishlist" text */}
+            {/* Username */}
             <span
               style={{
-                color: '#FFFFFF',
-                fontSize: 25,
-                letterSpacing: '0.03em',
+                color: '#545454',
+                fontSize: 24,
+                fontWeight: 400,
+                marginTop: 8,
               }}
             >
-              Ultimate wishlist
+              @{username}
             </span>
+            
+            {/* Bio */}
+            {bio && (
+              <p
+                style={{
+                  color: '#1A1A1A',
+                  fontSize: 22,
+                  fontWeight: 400,
+                  letterSpacing: '0.02em',
+                  lineHeight: 1.4,
+                  margin: 0,
+                  marginTop: 28,
+                  maxWidth: 400,
+                }}
+              >
+                {bio.length > 120 ? bio.slice(0, 120) + '...' : bio}
+              </p>
+            )}
           </div>
-          
-          {/* Main Content */}
+
+          {/* Right: Avatar */}
           <div
             style={{
               display: 'flex',
               alignItems: 'flex-start',
-              gap: 48,
-              marginTop: 72,
+              justifyContent: 'flex-end',
             }}
           >
-            {/* Avatar */}
-            {avatarUrl && (
+            {avatarUrl ? (
               <img
                 src={avatarUrl}
                 alt=""
                 style={{
-                  width: 180,
-                  height: 180,
-                  borderRadius: 90,
+                  width: 320,
+                  height: 400,
                   objectFit: 'cover',
-                  border: '4px solid rgba(255, 255, 255, 0.2)',
+                  backgroundColor: '#F7F7F7',
                 }}
               />
-            )}
-            
-            {/* Text content */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 20,
-                maxWidth: avatarUrl ? 500 : 650,
-              }}
-            >
-              {/* Name - UPPERCASE */}
-              <h1
+            ) : (
+              <div
                 style={{
-                  color: '#FFFFFF',
-                  fontSize: 56,
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.03em',
-                  lineHeight: 1,
-                  margin: 0,
+                  width: 320,
+                  height: 400,
+                  backgroundColor: '#F7F7F7',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                {displayName}
-              </h1>
-              
-              {/* Username */}
-              <span
-                style={{
-                  color: '#B3B3B3',
-                  fontSize: 32,
-                  fontWeight: 400,
-                }}
-              >
-                @{username}
-              </span>
-              
-              {/* Bio */}
-              {bio && (
-                <p
-                  style={{
-                    color: '#FFFFFF',
-                    fontSize: 28,
-                    fontWeight: 400,
-                    letterSpacing: '0.02em',
-                    lineHeight: 1.3,
-                    margin: 0,
-                    marginTop: 8,
-                    opacity: 0.9,
-                  }}
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#D1D5DB"
+                  strokeWidth="1"
                 >
-                  {bio.length > 100 ? bio.slice(0, 100) + '...' : bio}
-                </p>
-              )}
-            </div>
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M20 21a8 8 0 10-16 0" />
+                </svg>
+              </div>
+            )}
           </div>
+        </div>
+
+        {/* Bottom Bar - Download App */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#1A1A1A',
+            height: 54,
+            width: '100%',
+          }}
+        >
+          <span
+            style={{
+              color: '#FFFFFF',
+              fontSize: 18,
+              fontWeight: 500,
+              fontFamily: 'Futura, Helvetica Neue, Arial, sans-serif',
+            }}
+          >
+            download app
+          </span>
         </div>
       </div>
     ),

@@ -19,15 +19,13 @@ export async function GET(request: Request) {
     return new Response('Wishlist not found', { status: 404 });
   }
 
+  const name = wishlist.name || 'Wishlist';
+  const description = wishlist.description || '';
   const itemsCount = wishlist.items_count || 0;
   const ownerUsername = wishlist.owner_username || 'noto';
-  const description = wishlist.description || '';
+  const wishlistImage = wishlist.image_url;
   
-  // Фоновое изображение вишлиста или дефолт
-  const bgImage = wishlist.image_url || `${process.env.NEXT_PUBLIC_APP_URL}/images/hero-background.png`;
-  
-  // Иконка приложения
-  const appIconUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/app-icon.png`;
+  // Logo URL
   const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/logo.png`;
 
   return new ImageResponse(
@@ -37,152 +35,175 @@ export async function GET(request: Request) {
           width: 1200,
           height: 630,
           display: 'flex',
-          position: 'relative',
+          flexDirection: 'column',
+          backgroundColor: '#FFFFFF',
           fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+          position: 'relative',
         }}
       >
-        {/* Background Image */}
-        <img
-          src={bgImage}
-          alt=""
-          style={{
-            position: 'absolute',
-            top: -200,
-            left: 0,
-            width: 1200,
-            height: 1000,
-            objectFit: 'cover',
-          }}
-        />
-        
-        {/* Gradient Overlay - dark on left */}
+        {/* Header with Logo */}
         <div
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: 1200,
-            height: 630,
-            background: 'linear-gradient(270deg, rgba(26, 26, 26, 0.1) 0%, rgba(26, 26, 26, 0.85) 100%)',
-          }}
-        />
-        
-        {/* Content Container */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
             display: 'flex',
-            flexDirection: 'column',
-            padding: 72,
+            justifyContent: 'center',
+            paddingTop: 48,
+            paddingBottom: 32,
           }}
         >
-          {/* Header: App Icon + Logo + Text */}
-          <div
+          <img
+            src={logoUrl}
+            alt="Noto"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 24,
+              height: 48,
+              width: 'auto',
             }}
-          >
-            {/* App Icon with Logo inside */}
-            <div
-              style={{
-                width: 80,
-                height: 80,
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <img
-                src={appIconUrl}
-                alt=""
-                style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 19,
-                }}
-              />
-              <img
-                src={logoUrl}
-                alt=""
-                style={{
-                  position: 'absolute',
-                  width: 50,
-                  height: 'auto',
-                }}
-              />
-            </div>
-            
-            {/* "Ultimate wishlist" text */}
-            <span
-              style={{
-                color: '#FFFFFF',
-                fontSize: 25,
-                letterSpacing: '0.03em',
-              }}
-            >
-              Ultimate wishlist
-            </span>
-          </div>
-          
-          {/* Main Content */}
+          />
+        </div>
+
+        {/* Main Content */}
+        <div
+          style={{
+            display: 'flex',
+            flex: 1,
+            paddingLeft: 72,
+            paddingRight: 72,
+            gap: 64,
+          }}
+        >
+          {/* Left: Text Content */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: 28,
-              marginTop: 72,
-              maxWidth: 650,
+              justifyContent: 'flex-start',
+              paddingTop: 16,
+              flex: 1,
             }}
           >
-            {/* Title - UPPERCASE */}
+            {/* Name - UPPERCASE */}
             <h1
               style={{
-                color: '#FFFFFF',
-                fontSize: 56,
+                color: '#1A1A1A',
+                fontSize: 42,
                 fontWeight: 700,
                 textTransform: 'uppercase',
                 letterSpacing: '0.03em',
-                lineHeight: 1,
+                lineHeight: 1.1,
                 margin: 0,
+                maxWidth: 500,
               }}
             >
-              {wishlist.name}
+              {name.length > 35 ? name.slice(0, 35) + '...' : name}
             </h1>
+            
+            {/* Username + Items count */}
+            <span
+              style={{
+                color: '#545454',
+                fontSize: 20,
+                fontWeight: 400,
+                marginTop: 8,
+              }}
+            >
+              @{ownerUsername} · {itemsCount} {itemsCount === 1 ? 'item' : 'items'}
+            </span>
             
             {/* Description */}
             {description && (
               <p
                 style={{
-                  color: '#FFFFFF',
-                  fontSize: 32,
+                  color: '#1A1A1A',
+                  fontSize: 22,
                   fontWeight: 400,
-                  letterSpacing: '0.03em',
-                  lineHeight: 1.25,
+                  letterSpacing: '0.02em',
+                  lineHeight: 1.4,
                   margin: 0,
-                  maxWidth: 615,
+                  marginTop: 28,
+                  maxWidth: 420,
                 }}
               >
                 {description.length > 120 ? description.slice(0, 120) + '...' : description}
               </p>
             )}
-            
-            {/* Meta: items count + author */}
-            <span
-              style={{
-                color: '#B3B3B3',
-                fontSize: 32,
-                fontWeight: 400,
-                lineHeight: 1.1,
-              }}
-            >
-              {itemsCount} {itemsCount === 1 ? 'item' : 'items'} by @{ownerUsername}
-            </span>
           </div>
+
+          {/* Right: Wishlist Image */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-end',
+            }}
+          >
+            {wishlistImage ? (
+              <div
+                style={{
+                  width: 320,
+                  height: 400,
+                  backgroundColor: '#F7F7F7',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                }}
+              >
+                <img
+                  src={wishlistImage}
+                  alt=""
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: 320,
+                  height: 400,
+                  backgroundColor: '#F7F7F7',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#D1D5DB"
+                  strokeWidth="1"
+                >
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Bar - Download App */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#1A1A1A',
+            height: 54,
+            width: '100%',
+          }}
+        >
+          <span
+            style={{
+              color: '#FFFFFF',
+              fontSize: 18,
+              fontWeight: 500,
+              fontFamily: 'Futura, Helvetica Neue, Arial, sans-serif',
+            }}
+          >
+            download app
+          </span>
         </div>
       </div>
     ),
