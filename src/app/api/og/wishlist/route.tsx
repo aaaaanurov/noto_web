@@ -24,6 +24,8 @@ export async function GET(request: Request) {
   const itemsCount = wishlist.items_count || 0;
   const ownerUsername = wishlist.owner_username || 'noto';
   const wishlistImage = wishlist.image_url;
+  const coverColor = wishlist.cover_color_hex || '#E5E5E5';
+  const textColor = wishlist.text_color_hex || '#1A1A1A';
   
   // Logo URL
   const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/logo.png`;
@@ -127,7 +129,7 @@ export async function GET(request: Request) {
             )}
           </div>
 
-          {/* Right: Wishlist Image */}
+          {/* Right: Wishlist Cover (image or color with name) */}
           <div
             style={{
               display: 'flex',
@@ -135,51 +137,67 @@ export async function GET(request: Request) {
               justifyContent: 'flex-end',
             }}
           >
-            {wishlistImage ? (
-              <div
-                style={{
-                  width: 320,
-                  height: 400,
-                  backgroundColor: '#F7F7F7',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                }}
-              >
+            <div
+              style={{
+                width: 320,
+                height: 400,
+                backgroundColor: coverColor,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                position: 'relative',
+              }}
+            >
+              {/* Background image if exists */}
+              {wishlistImage && (
                 <img
                   src={wishlistImage}
                   alt=""
                   style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
                   }}
                 />
-              </div>
-            ) : (
-              <div
+              )}
+              
+              {/* Dark overlay for better text readability on images */}
+              {wishlistImage && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                  }}
+                />
+              )}
+              
+              {/* Name centered on cover - always visible */}
+              <span
                 style={{
-                  width: 320,
-                  height: 400,
-                  backgroundColor: '#F7F7F7',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  position: 'relative',
+                  color: wishlistImage ? '#FFFFFF' : textColor,
+                  fontSize: 28,
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  textAlign: 'center',
+                  padding: 24,
+                  lineHeight: 1.2,
+                  maxWidth: 280,
+                  wordBreak: 'break-word',
                 }}
               >
-                <svg
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#D1D5DB"
-                  strokeWidth="1"
-                >
-                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                </svg>
-              </div>
-            )}
+                {name.length > 40 ? name.slice(0, 40) + '...' : name}
+              </span>
+            </div>
           </div>
         </div>
 
