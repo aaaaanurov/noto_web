@@ -139,7 +139,7 @@ export async function GET(request: Request) {
           >
             <div
               style={{
-                width: 320,
+                width: 302,
                 height: 400,
                 backgroundColor: coverColor,
                 display: 'flex',
@@ -147,6 +147,9 @@ export async function GET(request: Request) {
                 justifyContent: 'center',
                 overflow: 'hidden',
                 position: 'relative',
+                borderRadius: 2,
+                border: '1px solid #8C0000',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
               }}
             >
               {/* Background image if exists */}

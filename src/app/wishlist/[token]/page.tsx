@@ -93,20 +93,25 @@ export default async function WishlistPage({ params }: Props) {
           @{wishlist.owner_username}
         </p>
 
-        {/* Cover Image/Color */}
+        {/* Cover Image/Color — 163:216 ratio, matching iOS app */}
         <div 
-          className="mt-[20px] w-full aspect-square max-w-[340px] flex items-center justify-center overflow-hidden"
-          style={{ backgroundColor: '#F7F7F7' }}
+          className="mt-[20px] w-full max-w-[340px] overflow-hidden relative"
+          style={{
+            aspectRatio: '163 / 216',
+            borderRadius: '2px',
+            border: '1px solid #8C0000',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+          }}
         >
           {hasImage ? (
             <img
               src={wishlist.image_url!}
               alt={wishlist.name}
-              className="w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover"
             />
           ) : (
             <div 
-              className="w-4/5 h-4/5 flex items-center justify-center text-white font-bold text-lg uppercase tracking-wide"
+              className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg uppercase tracking-wide"
               style={{ backgroundColor: coverColor }}
             >
               {wishlist.name}
