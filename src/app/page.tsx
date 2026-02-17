@@ -58,7 +58,7 @@ export default function Home() {
                   
                   {/* Бейдж — на одной линии с "wish-list" */}
                   <a
-                    href="https://apps.apple.com/app/noto"
+                    href="https://apps.apple.com/app/noto-ultimate-wishlist/id6753711015"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Download on the App Store"
