@@ -101,20 +101,19 @@ export default async function WishlistPage({ params }: Props) {
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
           }}
         >
-          {hasImage ? (
+          {hasImage && (
             <img
               src={wishlist.image_url!}
               alt={wishlist.name}
               className="absolute inset-0 w-full h-full object-cover"
             />
-          ) : (
-            <div 
-              className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg uppercase tracking-wide"
-              style={{ backgroundColor: coverColor }}
-            >
-              {wishlist.name}
-            </div>
           )}
+          <div 
+            className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg uppercase tracking-wide"
+            style={{ backgroundColor: hasImage ? undefined : coverColor }}
+          >
+            {wishlist.name}
+          </div>
         </div>
 
         {itemsCount > 0 && (
