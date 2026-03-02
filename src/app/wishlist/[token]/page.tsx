@@ -77,20 +77,18 @@ export default async function WishlistPage({ params }: Props) {
 
       {/* Content */}
       <main className="flex-1 px-[50px] pb-32">
-        {/* Title */}
         <h1 
-          className="text-[25px] font-bold uppercase tracking-[0.03em] leading-none text-black"
+          className="text-[25px] leading-none text-black"
           style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
         >
-          {wishlist.name}
+          <span className="font-bold uppercase tracking-[0.03em]">{wishlist.name}</span>
+          <span className="font-normal text-[15px] text-[#545454] ml-1.5 tracking-normal normal-case">wishlist</span>
         </h1>
-        
-        {/* Username */}
         <p 
           className="mt-[5px] text-[15px] text-[#545454]"
           style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
         >
-          @{wishlist.owner_username}
+          by @{wishlist.owner_username}
         </p>
 
         {/* Cover Image/Color — 163:216 ratio, matching iOS app */}
@@ -119,22 +117,14 @@ export default async function WishlistPage({ params }: Props) {
           )}
         </div>
 
-        {/* Items count */}
-        <p 
-          className="mt-6 text-[14px] text-black tracking-[0.03em]"
-          style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
-        >
-          {itemsCount} {itemsCount === 1 ? 'item' : 'items'}
-        </p>
-
-        {/* Description */}
-        {wishlist.description && (
-          <p 
-            className="mt-4 text-[14px] text-black leading-[1.43] tracking-[0.03em] max-w-[320px]"
+        {itemsCount > 0 && (
+          <Link
+            href={`/wishlist/${wishlist.share_token}/items`}
+            className="mt-6 inline-flex items-center gap-2 text-[#8C0000] text-[14px] font-medium tracking-[0.03em] underline decoration-[1.5px] underline-offset-[3px] hover:opacity-60 transition-opacity"
             style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
           >
-            {wishlist.description}
-          </p>
+            show {itemsCount} {itemsCount === 1 ? 'item' : 'items'} →
+          </Link>
         )}
       </main>
 

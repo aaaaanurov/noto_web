@@ -82,3 +82,12 @@ export interface ItemPreview {
   owner_username: string;
   owner_name: string | null;
 }
+
+export interface WishlistItemPreview {
+  id: number;
+  title: string;
+  image_url: string | null;
+  price_amount: number | null;
+  price_band: string | null;
+  url: string | null;
+}
