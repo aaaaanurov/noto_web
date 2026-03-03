@@ -58,6 +58,7 @@ export interface WishlistPreview {
   description: string | null;
   cover_color_hex: string | null;
   text_color_hex: string | null;
+  text_label_style: string | null;
   image_url: string | null;
   privacy: string;
   created_at: string;

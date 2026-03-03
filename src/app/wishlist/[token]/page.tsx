@@ -58,6 +58,9 @@ export default async function WishlistPage({ params }: Props) {
   const itemsCount = wishlist.items_count || 0;
   const hasImage = !!wishlist.image_url;
   const coverColor = wishlist.cover_color_hex || '#F7F7F7';
+  const textColor = wishlist.text_color_hex || '#FFFFFF';
+  const isBadge = wishlist.text_label_style === 'badge';
+  const badgeBg = textColor.toLowerCase() === '#ffffff' ? '#000000' : '#FFFFFF';
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -109,10 +112,17 @@ export default async function WishlistPage({ params }: Props) {
             />
           )}
           <div 
-            className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg uppercase tracking-wide"
+            className="absolute inset-0 flex items-center justify-center font-bold text-lg uppercase tracking-wide"
             style={{ backgroundColor: hasImage ? undefined : coverColor }}
           >
-            {wishlist.name}
+            <span
+              style={{
+                color: textColor,
+                ...(isBadge && { backgroundColor: badgeBg, padding: '4px 8px' }),
+              }}
+            >
+              {wishlist.name}
+            </span>
           </div>
         </div>
 

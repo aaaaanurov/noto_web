@@ -26,6 +26,8 @@ export async function GET(request: Request) {
   const wishlistImage = wishlist.image_url;
   const coverColor = wishlist.cover_color_hex || '#E5E5E5';
   const textColor = wishlist.text_color_hex || '#1A1A1A';
+  const isBadge = wishlist.text_label_style === 'badge';
+  const badgeBg = textColor.toLowerCase() === '#ffffff' ? '#000000' : '#FFFFFF';
   
   // Logo URL
   const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/logo.png`;
@@ -192,10 +194,12 @@ export async function GET(request: Request) {
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
                   textAlign: 'center',
-                  padding: 24,
+                  padding: isBadge ? '6px 12px' : '24px',
                   lineHeight: 1.2,
                   maxWidth: 280,
                   wordBreak: 'break-word',
+                  ...(isBadge && !wishlistImage && { backgroundColor: badgeBg }),
+                  ...(isBadge && wishlistImage && { backgroundColor: '#000000' }),
                 }}
               >
                 {name.length > 40 ? name.slice(0, 40) + '...' : name}
