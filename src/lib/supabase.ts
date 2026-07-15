@@ -32,7 +32,7 @@ export interface Wishlist {
   image_url: string | null;
   cover_color_hex: string | null;
   text_color_hex: string | null;
-  privacy: 'public' | 'unlisted' | 'private';
+  privacy: 'public' | 'unlisted' | 'private' | 'restricted';
   share_token: string | null;
   created_at: string;
 }

@@ -28,6 +28,7 @@ export async function GET(request: Request) {
   const textColor = wishlist.text_color_hex || '#1A1A1A';
   const isBadge = wishlist.text_label_style === 'badge';
   const badgeBg = textColor.toLowerCase() === '#ffffff' ? '#000000' : '#FFFFFF';
+  const isRestricted = wishlist.privacy === 'restricted';
   
   // Logo URL
   const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/images/logo.png`;
@@ -84,6 +85,22 @@ export async function GET(request: Request) {
               flex: 1,
             }}
           >
+            {/* Special invite label */}
+            {isRestricted && (
+              <span
+                style={{
+                  color: '#8C0000',
+                  fontSize: 18,
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  marginBottom: 12,
+                }}
+              >
+                Special invite
+              </span>
+            )}
+
             {/* Name - UPPERCASE */}
             <h1
               style={{

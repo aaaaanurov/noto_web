@@ -3,6 +3,7 @@ import { supabase, type WishlistPreview } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import InviteBanner from '@/components/InviteBanner';
 
 type Props = {
   params: Promise<{ token: string }>;
@@ -24,21 +25,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalUrl = `${process.env.NEXT_PUBLIC_APP_URL}/wishlist/${token}`;
   const robots = wishlist.privacy !== 'public' ? { index: false, follow: false } : {};
 
+  const isRestricted = wishlist.privacy === 'restricted';
+  const pageTitle = isRestricted
+    ? `You're invited · ${wishlist.name} — Noto`
+    : `${wishlist.name} - Noto`;
+  const ogTitle = isRestricted ? `You're invited · ${wishlist.name}` : wishlist.name;
+  const description = isRestricted
+    ? `@${wishlist.owner_username} invited you to a special list on Noto`
+    : wishlist.description || `Check out ${wishlist.name} wishlist on Noto`;
+
   return {
-    title: `${wishlist.name} - Noto`,
-    description: wishlist.description || `Check out ${wishlist.name} wishlist on Noto`,
+    title: pageTitle,
+    description,
     robots,
     openGraph: {
-      title: wishlist.name,
-      description: wishlist.description || `Check out ${wishlist.name} wishlist on Noto`,
+      title: ogTitle,
+      description,
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: wishlist.name }],
       url: canonicalUrl,
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: wishlist.name,
-      description: wishlist.description || `Check out ${wishlist.name} wishlist on Noto`,
+      title: ogTitle,
+      description,
       images: [ogImageUrl],
     },
   };
@@ -61,6 +71,7 @@ export default async function WishlistPage({ params }: Props) {
   const textColor = wishlist.text_color_hex || '#FFFFFF';
   const isBadge = wishlist.text_label_style === 'badge';
   const badgeBg = textColor.toLowerCase() === '#ffffff' ? '#000000' : '#FFFFFF';
+  const isRestricted = wishlist.privacy === 'restricted';
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -80,6 +91,9 @@ export default async function WishlistPage({ params }: Props) {
 
       {/* Content */}
       <main className="flex-1 px-[50px] pb-32">
+        {isRestricted && (
+          <InviteBanner ownerUsername={wishlist.owner_username} className="mb-5" />
+        )}
         <h1 
           className="text-[25px] leading-none text-black"
           style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
@@ -148,7 +162,7 @@ export default async function WishlistPage({ params }: Props) {
           className="text-white text-[16px] font-medium"
           style={{ fontFamily: 'Futura, Helvetica Neue, Arial, sans-serif' }}
         >
-          download app
+          {isRestricted ? 'open in Noto to save this list' : 'download app'}
         </span>
       </a>
     </div>

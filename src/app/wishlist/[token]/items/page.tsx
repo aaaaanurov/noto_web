@@ -3,6 +3,7 @@ import { supabase, type WishlistPreview, type WishlistItemPreview } from '@/lib/
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import InviteBanner from '@/components/InviteBanner';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,6 +85,7 @@ export default async function WishlistItemsPage({ params }: Props) {
   const coverColor = wishlist.cover_color_hex || '#FF0002';
   const textColor = wishlist.text_color_hex || '#FFFFFF';
   const hasImage = !!wishlist.image_url;
+  const isRestricted = wishlist.privacy === 'restricted';
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -112,6 +114,12 @@ export default async function WishlistItemsPage({ params }: Props) {
             ← back
           </Link>
         </div>
+
+        {isRestricted && (
+          <div className="px-4 pb-1">
+            <InviteBanner ownerUsername={wishlist.owner_username} />
+          </div>
+        )}
 
         {/* Header: cover 70x70 + title + meta — matches iOS WishlistDetailView */}
         <div className="px-4 py-3 flex items-start gap-3">
@@ -262,7 +270,7 @@ export default async function WishlistItemsPage({ params }: Props) {
           className="text-white text-[16px] font-medium"
           style={{ fontFamily: 'Futura, Helvetica Neue, Arial, sans-serif' }}
         >
-          download app
+          {isRestricted ? 'open in Noto to save this list' : 'download app'}
         </span>
       </a>
     </div>

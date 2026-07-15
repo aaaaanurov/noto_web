@@ -18,3 +18,4 @@ export default async function ShortWishlistPage({ params }: Props) {
 
 
 
+
